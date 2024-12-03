@@ -34,5 +34,5 @@ class Monster(Sprite):
         # Bounce the monster off the edges of the display
         if self.rect.left <= 0 or self.rect.right >= self.settings.WIDTH:
             self.dx *= -1
-        if self.rect.top <= 0 or self.rect.bottom >= self.settings.HEIGHT:
+        if self.rect.top <= 100 or self.rect.bottom >= self.settings.HEIGHT - 100:
             self.dy *= -1

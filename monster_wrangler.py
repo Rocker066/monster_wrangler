@@ -1,5 +1,4 @@
 import pygame
-from pygame.examples.aliens import Player
 
 from settings import Settings
 from player import Player
@@ -36,13 +35,10 @@ class MonsterWrangler:
 
         # Create a monster group
         self.my_monster_group = pygame.sprite.Group()
-        self.my_monster = Monster(500, 500, pygame.image.load('assets/blue_monster.png'), 0)
-        self.my_monster_group.add(self.my_monster)
-        self.my_monster2 = Monster(200, 500, pygame.image.load('assets/green_monster.png'), 1)
-        self.my_monster_group.add(self.my_monster2)
 
         # Create a game object
-        self.my_game = Game(self.my_player, self.my_monster_group)
+        self.my_game = Game(self ,self.my_player, self.my_monster_group)
+        self.my_game.start_new_round()
 
 
     def run_game(self):

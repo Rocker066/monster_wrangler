@@ -36,13 +36,13 @@ class Player(Sprite):
         keys = pygame.key.get_pressed()
 
         # Move the player within the bounds of the screen
-        if keys[pygame.K_LEFT] and self.rect.left > 0:
+        if keys[pygame.K_LEFT] and self.rect.left > 8:
             self.rect.x -= self.velocity
-        if keys[pygame.K_RIGHT] and self.rect.right < self.settings.WIDTH:
+        if keys[pygame.K_RIGHT] and self.rect.right < self.settings.WIDTH - 8:
             self.rect.x += self.velocity
-        if keys[pygame.K_UP] and self.rect.top > 0:
+        if keys[pygame.K_UP] and self.rect.top > 109:
             self.rect.y -= self.velocity
-        if keys[pygame.K_DOWN] and self.rect.bottom < self.settings.HEIGHT:
+        if keys[pygame.K_DOWN] and self.rect.bottom < self.settings.HEIGHT - 106:
             self.rect.y += self.velocity
 
 
