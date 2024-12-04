@@ -11,3 +11,8 @@ class Settings:
         # Set FPS
         self.FPS = 60
 
+        # Set colors
+        self.WHITE = (255, 255, 255)
+        self.BLACK = (0, 0, 0)
+        self.RED = (255, 0, 0)
+

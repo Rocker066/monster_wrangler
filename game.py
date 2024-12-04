@@ -1,5 +1,6 @@
 import pygame.mixer
 import random
+import sys
 
 from monster import Monster
 
@@ -12,6 +13,7 @@ class Game:
         # Initialize settings
         self.settings = mw_game.settings
         self.screen = mw_game.display_surface
+        self.running = mw_game.running
 
         # Set game values
         self.score = 0
@@ -29,6 +31,7 @@ class Game:
 
         # Set font
         self.font = pygame.font.Font('assets/Abrushow.ttf', 24)
+        self.font2 = pygame.font.Font('assets/Abrushow.ttf', 54)
 
         # Set images
         blue_image = pygame.image.load('assets/blue_monster.png')
@@ -139,8 +142,8 @@ class Game:
                 self.player.die_sound.play()
                 self.player.lives -= 1
                 # Check for game over
-                if self.player.lives  == 0:
-                    self.pause_game()
+                if self.player.lives <= 0:
+                    self.pause_game('Final Score: ' + str(self.score), 'Press Enter to play again')
                     self.reset_game()
                 self.player.reset()
 
@@ -161,7 +164,7 @@ class Game:
             self.monster_group.remove(monster)
 
         # Add monsters to the monster group for the new round (populate the board)
-        for i in range(self.round_number):
+        for i in range(self.round_number if self.round_number < 2 else self.round_number // 2):
             self.monster_group.add(Monster(random.randint(0, self.settings.WIDTH - 64),
                                            random.randint(100, self.settings.HEIGHT - 164),
                                            self.target_monster_images[0], 0))
@@ -185,14 +188,58 @@ class Game:
 
     def choose_new_target(self):
         """Choose a new target monster for the player"""
-        pass
+        target_monster = random.choice(self.monster_group.sprites())
+        self.target_monster_type = target_monster.type
+        self.target_monster_image = target_monster.image
 
 
-    def pause_game(self):
+    def pause_game(self, main_text, sub_text):
         """Pause the game"""
-        pass
+        # Create the main pause text
+        main_text = self.font2.render(main_text, True, self.settings.RED)
+        main_rect = main_text.get_rect()
+        main_rect.center = (self.settings.WIDTH // 2, self.settings.HEIGHT // 2)
+
+        # Create the sub pause text
+        sub_text = self.font.render(sub_text, True, self.settings.WHITE)
+        sub_rect = sub_text.get_rect()
+        sub_rect.center = (self.settings.WIDTH // 2, self.settings.HEIGHT // 2 + 64)
+
+        # Display the pause text
+        self.screen.fill(self.settings.BLACK)
+        self.screen.blit(main_text, main_rect)
+        self.screen.blit(sub_text, sub_rect)
+        pygame.display.update()
+
+        is_paused = True
+
+        while is_paused:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        is_paused = False
+                if event.type == pygame.QUIT:
+                    # is_paused = False
+                    sys.exit()
 
 
     def reset_game(self):
         """Reset the game"""
-        pass
+        self.score = 0
+        self.round_number = 0
+
+        self.player.lives = 5
+        self.player.warps = 2
+        self.player.reset()
+
+        self.start_new_round()
+
+
+    def paused(self):
+        paused_text = self.font.render('PAUSED', True, self.settings.WHITE)
+        paused_text_rect = paused_text.get_rect()
+        paused_text_rect.center = (self.settings.WIDTH // 2, self.settings.HEIGHT // 2)
+
+        self.screen.fill(self.settings.BLACK)
+        self.screen.blit(paused_text, paused_text_rect)
+        pygame.display.update()

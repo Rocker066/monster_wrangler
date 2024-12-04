@@ -23,7 +23,7 @@ class Monster(Sprite):
         # Set random motion
         self.dx = random.choice([-1, 1])
         self.dy = random.choice([-1, 1])
-        self.velocity = random.randint(1, 5)
+        self.velocity = random.randint(1, 3)
 
 
     def update(self):

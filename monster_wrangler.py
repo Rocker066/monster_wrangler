@@ -1,9 +1,9 @@
 import pygame
+import sys
 
 from settings import Settings
 from player import Player
 from game import Game
-from monster import Monster
 
 
 class MonsterWrangler:
@@ -27,6 +27,10 @@ class MonsterWrangler:
 
         # Set the state of the game
         self.running = True
+        self.game_paused = False
+
+        # hide the mouse
+        pygame.mouse.set_visible(False)
 
         # Instantiate the player object and create its group
         self.my_player_group = pygame.sprite.Group()
@@ -38,6 +42,7 @@ class MonsterWrangler:
 
         # Create a game object
         self.my_game = Game(self ,self.my_player, self.my_monster_group)
+        self.my_game.pause_game('Monster Wrangler', 'Press ENTER to start')
         self.my_game.start_new_round()
 
 
@@ -47,10 +52,22 @@ class MonsterWrangler:
             # Check to see if the user wants to quit
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.running = False
+                    sys.exit()
 
-            # Update the screen
-            self.update_screen()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        if self.my_player.rect.y < self.settings.HEIGHT - 100:
+                            self.my_player.warp()
+
+                    # Pause  and unpause the game if escape is pressed
+                    if event.key == pygame.K_ESCAPE:
+                        self.game_paused = not self.game_paused
+                        self.my_game.paused()
+
+            # If game is not paused then continue
+            if not self.game_paused:
+                # Update the screen
+                self.update_screen()
 
 
     def update_screen(self):
